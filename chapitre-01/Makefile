@@ -9,23 +9,27 @@ CFLAGS=-Wall -g -pthread
 LDFLAGS=-pthread
 LOADLIBES=-lrt
 
-APPLICATIONS:=              \
-	exemple-01          \
-	exemple-02          \
-	exemple-03          \
-	exemple-04          \
-	exemple-05          \
-	exemple-06          \
-	exemple-07          \
-	exemple-08          \
-	exemple-09          \
-	exemple-10          \
-	exemple-11          \
-	exemple-12          \
+
+EXE:=                 \
+  exemple-I-01        \
+  exemple-I-02        \
+  exemple-I-03        \
+  exemple-I-04        \
+  exemple-I-05        \
+  exemple-I-06        \
+  exemple-I-07        \
+  exemple-I-08        \
+  exemple-I-09        \
+  exemple-I-10        \
+  exemple-I-11        \
 
 
-all: ${APPLICATIONS}
+.PHONY: all
+all: ${EXE}
 
+
+.PHONY: clean
 clean::
-	rm -f ${APPLICATIONS} *.o *~
-	
+	rm -f ${EXE} *.o *~
+
+
