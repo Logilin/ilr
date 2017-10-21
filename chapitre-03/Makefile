@@ -1,21 +1,48 @@
 
-APPLICATIONS =                 \
-	exemple-01             \
-	exemple-02             \
-	exemple-03             \
-	exemple-04             \
+APPLICATIONS:=              \
+	exemple-01          \
+	exemple-02          \
+	exemple-03          \
+	exemple-04          \
+	exemple-07          \
+	exemple-08          \
+	exemple-09          \
+	exemple-10          \
+	exemple-11          \
+	exemple-12          \
 
-XENOCONFIG=/usr/xenomai/bin/xeno-config
 
-CC=$(shell      $(XENOCONFIG) --cc)
-MY_CFLAGS=-g
-CFLAGS=$(shell  $(XENOCONFIG) --skin=native --cflags)  $(MY_CFLAGS)
-LDFLAGS=$(shell $(XENOCONFIG) --skin=native --ldflags) $(MY_LDFLAGS)
-LIBDIR=$(shell  $(XENOCONFIG) --skin=native --libdir)  $(MY_LIBDIR)
-LDFLAGS+=-lnative 
-LDLIBS=-lnative -lxenomai
+ifneq (${KERNELRELEASE},)
 
-all:: $(APPLICATIONS)
+	# Exemples pour Raspberry Pi
+	obj-m += exemple-05.o
+	obj-m += exemple-06.o
+
+
+else
+
+CFLAGS=-Wall -g -pthread
+LDFLAGS=-pthread
+LOADLIBES=-lrt
+CC = ${CROSS_COMPILE}gcc
+AS = ${CROSS_COMPILE}as
+LD = ${CROSS_COMPILE}gcc
+
+	CROSS_COMPILE ?=
+	ARCH          ?=
+	KERNEL_DIR    ?= /lib/modules/$(shell uname -r)/build
+	MODULE_DIR    := $(shell pwd)
+
+.PHONY: all
+all: ${APPLICATIONS}
+
+.PHONY: modules
+modules:
+	${MAKE} arch=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} -C ${KERNEL_DIR} SUBDIRS=${MODULE_DIR}  modules
 
 clean::
-	$(RM) -f $(APPLICATIONS) *.o *~
+	rm -f ${APPLICATIONS} *.o *~
+	rm -f *.o *.ko *.mod.c modules.order Module.symvers
+	rm -rf .tmp_versions .*.cmd
+
+endif
