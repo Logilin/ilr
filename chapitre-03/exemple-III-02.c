@@ -14,6 +14,7 @@ void * fonction_thread(void * arg)
 	long int cpu = (long int) arg;
 	cpu_set_t cpu_set;
 	struct sched_param param;
+	int i;
 
 	CPU_ZERO(& cpu_set);
 	CPU_SET(cpu, & cpu_set);
@@ -30,7 +31,7 @@ void * fonction_thread(void * arg)
 
 	fprintf(stderr, "Thread sur CPU %ld va demarrer...\n", cpu);
 	sleep(1);
-	while (1)
+	for (i = 0; i < 2000000000; i++)
 		;
 	return NULL;
 }
@@ -41,7 +42,6 @@ int main(void)
 	long int cpu;
 	pthread_t thr;
 
-	alarm(15);
 	for (cpu = 0; cpu < sysconf(_SC_NPROCESSORS_ONLN); cpu ++)
 		pthread_create (& thr, NULL, fonction_thread, (void *) cpu);
         pthread_exit(NULL);
