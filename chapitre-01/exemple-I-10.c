@@ -16,6 +16,8 @@ int main(void)
 {
 	int cpu;
 	cpu_set_t cpu_set;
+	int i;
+
 	while (1) {
 		for (cpu = 0; cpu < sysconf(_SC_NPROCESSORS_ONLN); cpu ++) {
 			CPU_ZERO(& cpu_set);
@@ -23,7 +25,8 @@ int main(void)
 			sched_setaffinity(0, sizeof(cpu_set), & cpu_set);
 			fprintf(stderr, "[%d] je suis sur le CPU %d\n",
 			                 getpid(), sched_getcpu());
-			sleep(1);
+			for (i = 0; i < 1000000000; i ++)
+				;
 		}
 	}
 	return EXIT_SUCCESS;
