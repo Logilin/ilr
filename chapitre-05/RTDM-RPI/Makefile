@@ -1,5 +1,5 @@
 
-EXTRA_CFLAGS := -I /usr/local/src/xenomai-2.6.2.1/RPI/usr/xenomai/include/
+EXTRA_CFLAGS := -I /usr/xenomai/include/
 
 ifneq (${KERNELRELEASE},)
 	obj-m += irq-gpio-rtdm.o

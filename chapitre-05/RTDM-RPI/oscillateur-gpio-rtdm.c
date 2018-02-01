@@ -8,7 +8,8 @@
 
 #include <asm/uaccess.h>
 
-#include <rtdm/rtdm_driver.h>
+#include <rtdm/driver.h>
+#include <rtdm/gpio.h>
 
 static int periode_us = 1000;
 module_param(periode_us, int, 0644);

@@ -3,10 +3,9 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-#include <native/task.h>
-#include <native/mutex.h>
-#include <native/timer.h>
-#include <rtdk.h>
+#include <alchemy/task.h>
+#include <alchemy/mutex.h>
+#include <alchemy/timer.h>
 
 static RT_MUTEX  mutex;
 
@@ -87,7 +86,6 @@ int main(int argc, char * argv [])
 	RT_TASK task;
 
 	mlockall(MCL_CURRENT|MCL_FUTURE);
-	rt_print_auto_init(1);
 
 	if ((err = rt_mutex_create(& mutex, "Exemple-02")) != 0) {
 		fprintf(stderr, "rt_mutex_create:%s\n",

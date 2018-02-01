@@ -4,9 +4,8 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-#include <native/task.h>
-#include <native/timer.h>
-#include <rtdk.h>
+#include <alchemy/task.h>
+#include <alchemy/timer.h>
 
 void fonction_periodique (void * arg)
 {
@@ -73,7 +72,6 @@ int main(int argc, char * argv[])
 	}
 	
 	mlockall(MCL_CURRENT|MCL_FUTURE);
-	rt_print_auto_init(1);
 
 	if ((err = rt_task_spawn(& task, NULL, 0, 99,
 	        T_JOINABLE, fonction_periodique, & periode)) != 0) {

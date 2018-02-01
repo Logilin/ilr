@@ -3,7 +3,7 @@
 #include <linux/interrupt.h>
 #include <linux/module.h>
 
-#include <rtdm/rtdm_driver.h>
+#include <rtdm/driver.h>
 
 // GPIO IN 23 -> Broche 16
 #define GPIO_IN  23

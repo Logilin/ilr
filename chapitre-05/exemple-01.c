@@ -3,9 +3,7 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
-#include <rtdk.h>
-#include <native/task.h>
-
+#include <alchemy/task.h>
 
 void fonction_hello_world (void * unused)
 {
@@ -20,10 +18,9 @@ int main(void)
 {
 	int err;
 	RT_TASK task;
-	
+
 	mlockall(MCL_CURRENT|MCL_FUTURE);
-	rt_print_auto_init(1);
-	
+
 	if ((err = rt_task_spawn(& task, "Hello_01",
 	                         0, 99, T_JOINABLE,
 	                         fonction_hello_world, NULL)) != 0) {

@@ -9,9 +9,9 @@ XENOCONFIG=/usr/xenomai/bin/xeno-config
 
 CC=$(shell      $(XENOCONFIG) --cc)
 MY_CFLAGS=-g
-CFLAGS=$(shell  $(XENOCONFIG) --skin=native --cflags)  $(MY_CFLAGS)
-LDFLAGS=$(shell $(XENOCONFIG) --skin=native --ldflags) $(MY_LDFLAGS)
-LIBDIR=$(shell  $(XENOCONFIG) --skin=native --libdir)  $(MY_LIBDIR)
+CFLAGS=$(shell  $(XENOCONFIG) --alchemy --cflags)  $(MY_CFLAGS)
+LDFLAGS=$(shell $(XENOCONFIG) --alchemy --ldflags) $(MY_LDFLAGS)
+LIBDIR=$(shell  $(XENOCONFIG) --alchemy --libdir)  $(MY_LIBDIR)
 
 all:: $(EXE)
 
