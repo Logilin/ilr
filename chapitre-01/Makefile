@@ -1,3 +1,11 @@
+##############################################################################
+## Exemple de la formation "Temps-reel Linux et Xenomai"
+##
+## Christophe Blaess 2010-2018
+## http://christophe.blaess.fr
+## Licence GPLv2
+##############################################################################
+
 
 CROSS_COMPILE ?=
 
@@ -31,5 +39,4 @@ all: ${EXE}
 .PHONY: clean
 clean::
 	rm -f ${EXE} *.o *~
-
 

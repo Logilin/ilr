@@ -23,7 +23,7 @@ static rtdm_timer_t rtimer;
 static int __init init_oscillateur (void)
 {
 	int err;
-	
+
 	if ((err = gpio_request(GPIO_OSCILLATEUR, THIS_MODULE->name)) != 0) {
 		return err;
 	}
@@ -31,18 +31,18 @@ static int __init init_oscillateur (void)
 		gpio_free(GPIO_OSCILLATEUR);
 		return err;
 	}
-	
+
 	if ((err = rtdm_timer_init(& rtimer, timer_oscillateur, "Oscillateur")) != 0) {
 		gpio_free(GPIO_OSCILLATEUR);
 		return err;
 	}
-	
+
 	if ((err = rtdm_timer_start(& rtimer, periode_us*1000, periode_us*1000, RTDM_TIMERMODE_RELATIVE)) != 0) {
 		rtdm_timer_destroy(& rtimer);
 		gpio_free(GPIO_OSCILLATEUR);
 		return err;
 	}
-	return 0; 
+	return 0;
 }
 
 

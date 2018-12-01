@@ -1,3 +1,10 @@
+##############################################################################
+## Exemple de la formation "Temps-reel Linux et Xenomai"
+##
+## Christophe Blaess 2010-2018
+## http://christophe.blaess.fr
+## Licence GPLv2
+##############################################################################
 
 APPLICATIONS:=      \
   exemple-III-01    \
@@ -14,7 +21,6 @@ APPLICATIONS:=      \
 
 ifneq (${KERNELRELEASE},)
 
-  # Exemples pour Raspberry Pi
   obj-m += exemple-III-05.o
   obj-m += exemple-III-06.o
 

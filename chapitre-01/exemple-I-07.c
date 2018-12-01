@@ -1,9 +1,11 @@
 /****************************************************************************\
-** Exemple de la formation "Temps-reel Linux et Xenomai                     **
+** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
 **                                                                          **
-** Christophe Blaess 2012                                                   **
+** Christophe Blaess 2010-2018                                              **
 ** http://christophe.blaess.fr                                              **
+** Licence GPLv2                                                            **
 \****************************************************************************/
+
 
 #include <fcntl.h>
 #include <stdio.h>
@@ -11,12 +13,14 @@
 #include <unistd.h>
 #include <sys/mman.h>
 
+
 int main(int argc, char * argv[])
 {
 	int fd;
-	int * compteur;
+	int * counter;
+
 	if (argc != 2) {
-		fprintf(stderr, "usage: %s nom_shm\n", argv[0]);
+		fprintf(stderr, "usage: %s shm_name\n", argv[0]);
 		exit(1);
 	}
 	// Ouverture (ou creation) d'une zone de memoire partagee
@@ -27,14 +31,13 @@ int main(int argc, char * argv[])
 	// Dimensionnement (seulement a la creation initiale)
 	ftruncate(fd, sizeof(int));
 	// Projection en memoire virtuelle
-	compteur = mmap(NULL, sizeof(int), PROT_READ|PROT_WRITE,
+	counter = mmap(NULL, sizeof(int), PROT_READ|PROT_WRITE,
 	                MAP_SHARED, fd, 0);
 	// Utilisation
-	while (1) {
-		fprintf(stderr, "compteur = %d\n", * compteur);
+	for (;;) {
+		fprintf(stderr, "counter = %d\n", *counter);
 		sleep(1);
-		(* compteur) ++;
+		(*counter) ++;
 	}
 	return 0;
 }
-

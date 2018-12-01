@@ -1,3 +1,12 @@
+/****************************************************************************\
+** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
+**                                                                          **
+** Christophe Blaess 2010-2018                                              **
+** http://christophe.blaess.fr                                              **
+** Licence GPLv2                                                            **
+\****************************************************************************/
+
+
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -5,89 +14,89 @@
 #include <unistd.h>
 
 
+static int _Nb_measure_per_interval = 0;
 
-static int nb_mesures = 0;
 
-void handler_alarm(int unused)
+void sigalrm_handler(int unused)
 {
 	static long long int min;
 	static long long int max;
 	static long long int sum;
 	static long long int max_max = 0;
-	static struct timespec precedent;
-	static int mesure = -1;
+	static int measure = -1;
+	static struct timespec previous;
+	struct timespec now;
+	long long int duration;
 
-	long long int duree;
-	struct timespec ts;
+	(void) unused;
 
-	if (mesure == -1) {
+	if (measure < 0) {
 		min = -1;
 		max = 0;
 		sum = 0;
-		clock_gettime(CLOCK_REALTIME, & precedent);
-		mesure ++;
+		clock_gettime(CLOCK_REALTIME, &previous);
+		measure ++;
 		return;
-	} 
+	}
 
-	clock_gettime(CLOCK_REALTIME, & ts);
-	duree  = ts.tv_sec - precedent.tv_sec;
-	duree *= 1000000000; // en nanosecondes
-	duree += ts.tv_nsec - precedent.tv_nsec;
-	duree /= 1000; // en microsecondes
-	if ((min == -1) || (duree < min))
-		min = duree;
-	if (duree > max) {
-		max = duree;
+	clock_gettime(CLOCK_REALTIME, &now);
+	duration  = now.tv_sec - previous.tv_sec;
+	duration *= 1000000000;
+	duration += now.tv_nsec - previous.tv_nsec;
+	duration /= 1000;
+	if ((min == -1) || (duration < min))
+		min = duration;
+	if (duration > max) {
+		max = duration;
 		if (max_max < max)
-			max_max = duree;
+			max_max = duration;
 	}
-	sum += duree;
-	precedent = ts;
-	mesure ++;
-	if (mesure == nb_mesures) {
+	sum += duration;
+	previous = now;
+	measure ++;
+	if (measure == _Nb_measure_per_interval) {
 		fprintf(stdout, "Min.= %lld, Moy.=%lld, Max.=%lld,  Max.Max.=%lld\n",
-			min, sum / nb_mesures, max, max_max);
-		mesure = -1;
+			min, sum / _Nb_measure_per_interval, max, max_max);
+		measure = -1;
 	}
-	
 }
 
 
 int main (int argc, char * argv[])
 {
-	long int periode;
+	long int period;
 	timer_t tmr;
-	struct sigevent notification;
+	struct sigevent notify;
 	struct itimerspec itimer;
 
 
-	if ((argc != 2) || (sscanf(argv[1], "%ld", & periode) != 1)) {
-		fprintf(stderr, "usage: %s periode_us\n", argv[0]);
+	if ((argc != 2) || (sscanf(argv[1], "%ld", &period) != 1)) {
+		fprintf(stderr, "usage: %s period_us\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
-	if ((periode <= 0) || (periode > 2000000)) {
-		fprintf(stderr, "%s: La periode doit etre dans [1, 2000000]\n", argv[0]);
+	if ((period <= 0) || (period > 2000000)) {
+		fprintf(stderr, "%s: the period must be in [1, 2000000]\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
 
-	nb_mesures = 2000000 / periode; // Un affichage toutes les deux secondes environ
+	_Nb_measure_per_interval = 2000000 / period; // Un affichage toutes les deux secondes environ
 
-	signal(SIGALRM, handler_alarm);
-	notification.sigev_notify = SIGEV_SIGNAL;
-	notification.sigev_signo  = SIGALRM;
-	if (timer_create(CLOCK_REALTIME, & notification, & tmr) != 0) {
+	signal(SIGALRM, sigalrm_handler);
+	notify.sigev_notify = SIGEV_SIGNAL;
+	notify.sigev_signo  = SIGALRM;
+	if (timer_create(CLOCK_REALTIME, &notify, & tmr) != 0) {
 		perror("timer_create");
 		exit(EXIT_FAILURE);
 	}
 
-	itimer.it_value.tv_sec  = itimer.it_interval.tv_sec  = periode / 1000000;  // en secondes
-	itimer.it_value.tv_nsec = itimer.it_interval.tv_nsec = (periode % 1000000) * 1000; // en nanosecondes
+	itimer.it_value.tv_sec  = itimer.it_interval.tv_sec  = period / 1000000;  // seconds
+	itimer.it_value.tv_nsec = itimer.it_interval.tv_nsec = (period % 1000000) * 1000; // nanoseconds
 	if (timer_settime(tmr, 0, & itimer, NULL) != 0) {
 		perror("timer_settime");
 		exit(EXIT_FAILURE);
 	}
 
-	while(1)
+	for(;;)
 		pause();
 
 	return EXIT_SUCCESS;

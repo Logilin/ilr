@@ -1,3 +1,12 @@
+/****************************************************************************\
+** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
+**                                                                          **
+** Christophe Blaess 2010-2018                                              **
+** http://christophe.blaess.fr                                              **
+** Licence GPLv2                                                            **
+\****************************************************************************/
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -5,11 +14,12 @@
 
 #include <alchemy/task.h>
 
-void fonction_hello_world (void * unused)
+
+void hello_world_function (void * unused)
 {
-	while (1) {
+	for (;;) {
 		rt_printf("Hello from Xenomai Realtime Space\n");
-		rt_task_sleep(1000000000LL); // 1 milliard ns = 1 s.
+		rt_task_sleep(1000000000LL); // 1 second.
 	}
 }
 
@@ -23,11 +33,12 @@ int main(void)
 
 	if ((err = rt_task_spawn(& task, "Hello_01",
 	                         0, 99, T_JOINABLE,
-	                         fonction_hello_world, NULL)) != 0) {
+	                         hello_world_function, NULL)) != 0) {
 		fprintf(stderr, "rt_task_spawn: %s\n", strerror(-err));
 		exit(EXIT_FAILURE);
 	}
+
 	rt_task_join(& task);
+
 	return 0;
 }
-

@@ -1,41 +1,45 @@
 /****************************************************************************\
-** Exemple de la formation "Temps-reel Linux et Xenomai                     **
+** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
 **                                                                          **
-** Christophe Blaess 2012                                                   **
+** Christophe Blaess 2010-2018                                              **
 ** http://christophe.blaess.fr                                              **
+** Licence GPLv2                                                            **
 \****************************************************************************/
 
-#define _GNU_SOURCE  // sched_getcpu() est une extension GNU
+
+#define _GNU_SOURCE  // sched_getcpu()
+
+
 #include <sched.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include <unistd.h>
 
+
 int main(void)
 {
-	int n;
-	int precedent = -1;
-	time_t heure;
-	struct tm * tm_heure;
-	
-	while (1) {
-		n=sched_getcpu();
-		if (n == -1) {
+	int cpu;
+	int previous = -1;
+	time_t now;
+	struct tm * now_tm;
+
+	for (;;) {
+		cpu = sched_getcpu();
+		if (cpu == -1) {
 			perror("sched_getcpu");
 			exit(EXIT_FAILURE);
 		}
-		if (precedent == -1)
-			precedent = n;
-		if (n != precedent) {
-			heure = time(NULL);
-			tm_heure = localtime(& heure);
+		if (previous == -1)
+			previous = cpu;
+		if (cpu != previous) {
+			now = time(NULL);
+			now_tm = localtime(&now);
 			fprintf(stdout, "%02d:%02d:%02d migration %d -> %d\n",
-			         tm_heure->tm_hour, tm_heure->tm_min, tm_heure->tm_sec,
-			         precedent, n);
-			precedent = n;
+			         now_tm->tm_hour, now_tm->tm_min, now_tm->tm_sec,
+			         previous, cpu);
+			previous = cpu;
 		}
 	}
 	return EXIT_SUCCESS;
 }
-

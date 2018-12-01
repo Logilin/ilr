@@ -1,43 +1,48 @@
 /****************************************************************************\
-** Exemple de la formation "Temps-reel Linux et Xenomai                     **
+** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
 **                                                                          **
-** Christophe Blaess 2012                                                   **
+** Christophe Blaess 2010-2018                                              **
 ** http://christophe.blaess.fr                                              **
+** Licence GPLv2                                                            **
 \****************************************************************************/
+
 
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 
-static int compteur = 0;
 
-void * fonction (void * arg)
+static int _Counter = 0;
+
+
+void *thread_function (void *arg)
 {
-	long numero = (long) arg;
+	long number = (long) arg;
+
 	while (1) {
-		fprintf(stderr, "Thread %ld, compteur = %d\n",
-		        numero, compteur);
+		fprintf(stderr, "Thread %ld, counter = %d\n",
+		        number, _Counter);
 		sleep(1);
 	}
 	return NULL;
 }
 
-#define NB_THREADS 5
+
+#define THREADS 5
+
 
 int main(void)
 {
 	long i;
-	pthread_t thr[NB_THREADS];
+	pthread_t thr[THREADS];
 
-	for (i = 0; i < NB_THREADS; i ++)
-		pthread_create(&(thr[i]), NULL, fonction, (void *)i);
+	for (i = 0; i < THREADS; i ++)
+		pthread_create(&(thr[i]), NULL, thread_function, (void *)i);
 
 	while (1) {
-		fprintf(stderr, "Main : compteur = %d\n",
-		                compteur ++);
+		fprintf(stderr, "Main : counter = %d\n", _Counter ++);
 		sleep(1);
 	}
 	return 0;
 }
-

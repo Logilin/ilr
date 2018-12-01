@@ -27,7 +27,7 @@ static int __init exemple_init (void)
 	int err;
 
 	int numero_interruption = gpio_to_irq(GPIO_IN);
-	
+
 	if ((err = gpio_request(GPIO_IN, THIS_MODULE->name)) != 0) {
 		return err;
 	}
@@ -47,8 +47,8 @@ static int __init exemple_init (void)
 
 	irq_set_irq_type(numero_interruption,  IRQF_TRIGGER_RISING);
 
-	if ((err = rtdm_irq_request(& irq_rtdm, 
-	                 numero_interruption, handler_interruption, 
+	if ((err = rtdm_irq_request(& irq_rtdm,
+	                 numero_interruption, handler_interruption,
 	                 RTDM_IRQTYPE_EDGE,
 	                 THIS_MODULE->name, NULL)) != 0) {
 		gpio_free(GPIO_OUT);
@@ -56,7 +56,7 @@ static int __init exemple_init (void)
 		return err;
 	}
 
-	return 0; 
+	return 0;
 }
 
 

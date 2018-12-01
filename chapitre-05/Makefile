@@ -1,3 +1,10 @@
+##############################################################################
+## Exemple de la formation "Temps-reel Linux et Xenomai"
+##
+## Christophe Blaess 2010-2018
+## http://christophe.blaess.fr
+## Licence GPLv2
+##############################################################################
 
 EXE =                    \
   exemple-01             \
