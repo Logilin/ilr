@@ -13,10 +13,6 @@
 #include <pthread.h>
 #include <sys/time.h>
 
-pthread_mutex_t mutex;
-pthread_t thr1, thr2, thr3;
-pthread_attr_t attr1, attr2, attr3;
-
 pthread_mutex_t _Mutex;
 pthread_t _Thread_1, _Thread_2, _Thread_3;
 pthread_attr_t _Attr_1, _Attr_2, _Attr_3;
@@ -73,7 +69,7 @@ void * thread_function_1(void *unused)
 	pthread_create(&_Thread_2, &_Attr_2, thread_function_2, NULL);
 
 	fprintf(stderr, "T1 releases the mutex.\n");
-	pthread_mutex_unlock(& mutex);
+	pthread_mutex_unlock(&_Mutex);
 	fprintf(stderr, "T1 terminates.\n");
 	return NULL;
 }
