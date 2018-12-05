@@ -11,6 +11,7 @@ EXE =                    \
   exemple-02             \
   exemple-03             \
   exemple-04             \
+  exemple-05             \
 
 XENOCONFIG=/usr/xenomai/bin/xeno-config
 
