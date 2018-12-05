@@ -31,16 +31,14 @@ void thread_function_1 (void * unused)
 {
 	(void) unused;
 
-	rt_mutex_acquire(&_Mutex, TM_INFINITE);
-
-	while (_Switches < MAX_SWITCHES) {
-		rt_task_sleep(10000000UL); // 10 ms
-		_Before_switch = rt_timer_read();
-		rt_mutex_release(&_Mutex);
-		rt_task_yield();
-		rt_mutex_acquire(&_Mutex, TM_INFINITE);
+	do {
+	    rt_mutex_acquire(&_Mutex, TM_INFINITE);
+	    rt_task_sleep(10000000UL); // 10 ms
+	    _Before_switch = rt_timer_read();
+	    rt_mutex_release(&_Mutex);
+	    rt_task_yield(); 
 	}
-	rt_mutex_release(&_Mutex);
+	while (_Switches < MAX_SWITCHES);
 }
 
 
