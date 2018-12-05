@@ -53,7 +53,7 @@ void periodic_task (void * arg)
 			}
 			measure ++;
 			if (measure == nb_measure_per_cycle) {
-				fprintf(stdout, "Min.=%lld, Moy.=%lld, Max.=%lld, Max.Max.=%lld\n",
+				rt_printf("Min.=%lld, Moy.=%lld, Max.=%lld, Max.Max.=%lld\n",
 					min/1000, sum/nb_measure_per_cycle/1000, max/1000, max_max/1000);
 				measure = 0;
 				min = -1;
