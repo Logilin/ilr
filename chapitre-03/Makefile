@@ -17,6 +17,7 @@ APPLICATIONS:=      \
   exemple-III-10    \
   exemple-III-11    \
   exemple-III-12    \
+  exemple-III-13    \
 
 
 ifneq (${KERNELRELEASE},)
