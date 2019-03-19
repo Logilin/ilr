@@ -34,12 +34,12 @@ void sigalrm_handler(int unused)
 		min = -1;
 		max = 0;
 		sum = 0;
-		clock_gettime(CLOCK_REALTIME, &previous);
+		clock_gettime(CLOCK_MONOTONIC, &previous);
 		measure ++;
 		return;
 	}
 
-	clock_gettime(CLOCK_REALTIME, &now);
+	clock_gettime(CLOCK_MONOTONIC, &now);
 	duration  = now.tv_sec - previous.tv_sec;
 	duration *= 1000000000;
 	duration += now.tv_nsec - previous.tv_nsec;
@@ -84,7 +84,7 @@ int main (int argc, char * argv[])
 	signal(SIGALRM, sigalrm_handler);
 	notify.sigev_notify = SIGEV_SIGNAL;
 	notify.sigev_signo  = SIGALRM;
-	if (timer_create(CLOCK_REALTIME, &notify, & tmr) != 0) {
+	if (timer_create(CLOCK_MONOTONIC, &notify, & tmr) != 0) {
 		perror("timer_create");
 		exit(EXIT_FAILURE);
 	}
