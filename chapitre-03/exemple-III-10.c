@@ -56,6 +56,8 @@ void * thread_function_2(void * unused)
 
 void * thread_function_1(void *unused)
 {
+	int i;
+
 	fprintf(stderr, "T1 starts.\n");
 
 	fprintf(stderr, "T1 waits for the mutex.\n");
@@ -68,6 +70,9 @@ void * thread_function_1(void *unused)
 	fprintf(stderr, "    T2 wakes up.\n");
 	pthread_create(&_Thread_2, &_Attr_2, thread_function_2, NULL);
 
+	fprintf(stderr, "    T1 works...\n");
+	for (i = 0; i < LOOPS; i ++)
+		;
 	fprintf(stderr, "T1 releases the mutex.\n");
 	pthread_mutex_unlock(&_Mutex);
 	fprintf(stderr, "T1 terminates.\n");
@@ -88,15 +93,18 @@ int main(int argc, char * argv [])
 	pthread_attr_init(&_Attr_1);
 	pthread_attr_init(&_Attr_2);
 	pthread_attr_init(&_Attr_3);
+
 	pthread_attr_setschedpolicy(&_Attr_1, SCHED_FIFO);
 	pthread_attr_setschedpolicy(&_Attr_2, SCHED_FIFO);
 	pthread_attr_setschedpolicy(&_Attr_3, SCHED_FIFO);
+
 	param.sched_priority = 10;
 	pthread_attr_setschedparam(&_Attr_1, & param);
 	param.sched_priority = 20;
 	pthread_attr_setschedparam(&_Attr_2, & param);
 	param.sched_priority = 30;
 	pthread_attr_setschedparam(&_Attr_3, & param);
+
 	pthread_attr_setinheritsched(&_Attr_1, PTHREAD_EXPLICIT_SCHED);
 	pthread_attr_setinheritsched(&_Attr_2, PTHREAD_EXPLICIT_SCHED);
 	pthread_attr_setinheritsched(&_Attr_3, PTHREAD_EXPLICIT_SCHED);
