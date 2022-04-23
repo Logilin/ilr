@@ -1,7 +1,7 @@
 /****************************************************************************\
 ** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
 **                                                                          **
-** Christophe Blaess 2010-2018                                              **
+** Christophe Blaess 2010-2022                                              **
 ** http://christophe.blaess.fr                                              **
 ** Licence GPLv2                                                            **
 \****************************************************************************/
@@ -19,7 +19,7 @@
 #include <unistd.h>
 
 
-#define LOOPS 500000000
+#define LOOPS 1000000000
 
 
 void * thread_function(void *);
@@ -58,7 +58,7 @@ int main(void)
 
 void * thread_function(void * arg)
 {
-	int i;
+	unsigned int i;
 	long num = (long) arg;
 
 	for (;;) {
