@@ -1,7 +1,7 @@
 /****************************************************************************\
 ** Exemple de la formation "Temps-reel Linux et Xenomai"                    **
 **                                                                          **
-** Christophe Blaess 2010-2018                                              **
+** Christophe Blaess 2010-2022                                              **
 ** http://christophe.blaess.fr                                              **
 ** Licence GPLv2                                                            **
 \****************************************************************************/
@@ -20,7 +20,7 @@ pthread_mutex_t _Mutex;
 
 void * thread_function_2(void * unused)
 {
-	int i;
+	unsigned int i;
 
 	sleep(3);
 	while (1) {
