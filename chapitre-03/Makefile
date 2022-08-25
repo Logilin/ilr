@@ -20,7 +20,7 @@ APPLICATIONS:=      \
   exemple-III-13    \
 
 
-ifneq (${KERNELRELEASE},)
+ifneq ($(KERNELRELEASE),)
 
   obj-m += exemple-III-05.o
   obj-m += exemple-III-06.o
@@ -31,9 +31,9 @@ else
 CFLAGS=-Wall -g -pthread
 LDFLAGS=-pthread
 LOADLIBES=-lrt
-CC = ${CROSS_COMPILE}gcc
-AS = ${CROSS_COMPILE}as
-LD = ${CROSS_COMPILE}gcc
+CC = $(CROSS_COMPILE)gcc
+AS = $(CROSS_COMPILE)as
+LD = $(CROSS_COMPILE)gcc
 
 	CROSS_COMPILE ?=
 	ARCH          ?=
@@ -41,15 +41,15 @@ LD = ${CROSS_COMPILE}gcc
 	MODULE_DIR    := $(shell pwd)
 
 .PHONY: all
-all: ${APPLICATIONS}
+all: $(APPLICATIONS)
 
 .PHONY: modules
 modules:
-	${MAKE} arch=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} -C ${KERNEL_DIR} SUBDIRS=${MODULE_DIR}  modules
+	$(MAKE) arch=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL_DIR) SUBDIRS=$(MODULE_DIR)  modules
 
 .PHONY: clean
 clean:
-	rm -f ${APPLICATIONS} *.o *~
+	rm -f $(APPLICATIONS) *.o *~
 	rm -f *.o *.ko *.mod.c modules.order Module.symvers
 	rm -rf .tmp_versions .*.cmd
 
