@@ -1,7 +1,7 @@
 ##############################################################################
-## Exemple de la formation "Temps-reel Linux et Xenomai"
+## Exemple de la formation "Temps-reel sous Linux"
 ##
-## Christophe Blaess 2010-2018
+## Christophe Blaess 2010-2022
 ## http://christophe.blaess.fr
 ## Licence GPLv2
 ##############################################################################
