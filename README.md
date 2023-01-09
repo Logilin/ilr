@@ -1,6 +1,6 @@
 # ilr
 
-v.48
+v.4.9
 
 Ce répertoire contient les exemples de notre cours "Temps réel Linux et Xenomai".
 
