@@ -45,27 +45,23 @@ static int __init my_module_init (void)
 	if ((err = gpio_request(RPI_IRQ_GPIO_OUT, THIS_MODULE->name)) != 0)
 		return err;
 
-	// Demander l'acces au GPIO d'entree.
 	if ((err = gpio_request(RPI_IRQ_GPIO_IN, THIS_MODULE->name)) != 0) {
 		gpio_free(RPI_IRQ_GPIO_OUT);
 		return err;
 	}
 
-	// Configurer la direction du GPIO de sortie.
 	if ((err = gpio_direction_output(RPI_IRQ_GPIO_OUT,1)) != 0) {
 		gpio_free(RPI_IRQ_GPIO_OUT);
 		gpio_free(RPI_IRQ_GPIO_IN);
 		return err;
 	}
 
-	// Configurer la direction du GPIO d'entree.
 	if ((err = gpio_direction_input(RPI_IRQ_GPIO_IN)) != 0) {
 		gpio_free(RPI_IRQ_GPIO_OUT);
 		gpio_free(RPI_IRQ_GPIO_IN);
 		return err;
 	}
 
-	// Installer le handler d'interruption.
 	if ((err = request_threaded_irq(gpio_to_irq(RPI_IRQ_GPIO_IN),
 	                       my_irq_handler,
 	                       my_irq_thread,
@@ -84,9 +80,7 @@ static int __init my_module_init (void)
 
 static void __exit my_module_exit (void)
 {
-	// Retrait du handler d'interruption.
 	free_irq(gpio_to_irq(RPI_IRQ_GPIO_IN), THIS_MODULE->name);
-	// Liberation des GPIO.
 	gpio_free(RPI_IRQ_GPIO_OUT);
 	gpio_free(RPI_IRQ_GPIO_IN);
 }

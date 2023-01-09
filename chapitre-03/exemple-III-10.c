@@ -70,9 +70,6 @@ void * thread_function_1(void *unused)
 	fprintf(stderr, "    T2 wakes up.\n");
 	pthread_create(&_Thread_2, &_Attr_2, thread_function_2, NULL);
 
-	fprintf(stderr, "    T1 works...\n");
-	for (i = 0; i < LOOPS; i ++)
-		;
 	fprintf(stderr, "T1 releases the mutex.\n");
 	pthread_mutex_unlock(&_Mutex);
 	fprintf(stderr, "T1 terminates.\n");
