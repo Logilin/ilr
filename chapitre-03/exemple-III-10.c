@@ -56,8 +56,6 @@ void * thread_function_2(void * unused)
 
 void * thread_function_1(void *unused)
 {
-	int i;
-
 	fprintf(stderr, "T1 starts.\n");
 
 	fprintf(stderr, "T1 waits for the mutex.\n");
