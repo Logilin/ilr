@@ -1,7 +1,7 @@
 ##############################################################################
 ## Exemple de la formation "Temps-reel sous Linux"
 ##
-## Christophe Blaess 2010-2023
+## Christophe Blaess 2010-2025
 ## http://christophe.blaess.fr
 ## Licence GPLv2
 ##############################################################################
@@ -17,7 +17,6 @@ APPLICATIONS:=      \
   exemple-III-10    \
   exemple-III-11    \
   exemple-III-12    \
-  exemple-III-13    \
 
 
 ifneq ($(KERNELRELEASE),)
@@ -31,21 +30,23 @@ else
 CFLAGS=-Wall -g -pthread
 LDFLAGS=-pthread
 LOADLIBES=-lrt
+
+CROSS_COMPILE ?=
+ARCH          ?=
+KERNEL_DIR    ?= /lib/modules/$(shell uname -r)/build
+MODULE_DIR    := $(shell pwd)
+
 CC = $(CROSS_COMPILE)gcc
 AS = $(CROSS_COMPILE)as
 LD = $(CROSS_COMPILE)gcc
 
-	CROSS_COMPILE ?=
-	ARCH          ?=
-	KERNEL_DIR    ?= /lib/modules/$(shell uname -r)/build
-	MODULE_DIR    := $(shell pwd)
 
 .PHONY: all
 all: $(APPLICATIONS)
 
 .PHONY: modules
 modules:
-	$(MAKE) arch=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL_DIR) SUBDIRS=$(MODULE_DIR)  modules
+	$(MAKE) arch=$(ARCH) CROSS_COMPILE=$(CROSS_COMPILE) -C $(KERNEL_DIR) M=$(MODULE_DIR)  modules
 
 .PHONY: clean
 clean:

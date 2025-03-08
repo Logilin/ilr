@@ -1,7 +1,7 @@
 /****************************************************************************\
 ** Exemple de la formation "Temps-reel sous Linux"                          **
 **                                                                          **
-** Christophe Blaess 2010-2023                                              **
+** Christophe Blaess 2010-2025                                              **
 ** http://christophe.blaess.fr                                              **
 ** Licence GPLv2                                                            **
 \****************************************************************************/
@@ -14,18 +14,19 @@
 #include <unistd.h>
 
 
-#define LOOPS 1000000000
+unsigned long Loops = 0;
 
 pthread_barrier_t _Barrier;
 
-void * thread_function (void * unused)
+
+void *thread_function (void *unused)
 {
-	unsigned int i;
+	unsigned long int i;
 	time_t start, end;
 
 	pthread_barrier_wait(&_Barrier);
 	start = time(NULL);
-	for (i = 0; i < LOOPS; i ++)
+	for (i = 0; i < Loops; i ++)
 		;
 	end = time(NULL);
 	fprintf(stderr, "%ld -> %ld\n", start, end);
@@ -35,12 +36,18 @@ void * thread_function (void * unused)
 
 #define NB 4
 
-int main(void)
+int main(int argc, char *argv[])
 {
 	pthread_t thr[NB];
 	pthread_attr_t attr;
 	struct sched_param param;
 	int i;
+
+	if ((argc != 2)
+	 || (sscanf(argv[1], "%lu", &Loops) != 1)) {
+		fprintf(stderr, "Usage: %s <loops>\n", argv[0]);
+		exit(EXIT_FAILURE);
+	}
 
 	pthread_barrier_init(&_Barrier, NULL, NB);
 	pthread_attr_init(& attr);

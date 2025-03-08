@@ -1,7 +1,7 @@
 /****************************************************************************\
 ** Exemple de la formation "Temps-reel sous Linux"                          **
 **                                                                          **
-** Christophe Blaess 2010-2023                                              **
+** Christophe Blaess 2010-2025                                              **
 ** http://christophe.blaess.fr                                              **
 ** Licence GPLv2                                                            **
 \****************************************************************************/
@@ -18,19 +18,19 @@ pthread_t _Thread_1, _Thread_2, _Thread_3;
 pthread_attr_t _Attr_1, _Attr_2, _Attr_3;
 
 
-#define LOOPS 1000000000
+unsigned long Loops = 0;
 
 
-void * thread_function_3(void * unused)
+void *thread_function_3(void *unused)
 {
-	unsigned int i;
+	unsigned long int i;
 
 	fprintf(stderr, "        T3 starts.\n");
 	fprintf(stderr, "        T3 waits for the mutex.\n");
 	pthread_mutex_lock(&_Mutex);
 	fprintf(stderr, "        T3 holds the mutex.\n");
 	fprintf(stderr, "        T3 works...\n");
-	for (i = 0; i < LOOPS; i ++)
+	for (i = 0; i < Loops; i ++)
 		;
 	fprintf(stderr, "        T3 releases the mutex.\n");
 	pthread_mutex_unlock(&_Mutex);
@@ -40,13 +40,13 @@ void * thread_function_3(void * unused)
 }
 
 
-void * thread_function_2(void * unused)
+void *thread_function_2(void *unused)
 {
-	unsigned int i;
+	unsigned long int i;
 
 	fprintf(stderr, "    T2 starts.\n");
 	fprintf(stderr, "    T2 works...\n");
-	for (i = 0; i < LOOPS; i ++)
+	for (i = 0; i < Loops; i ++)
 		;
 	fprintf(stderr, "    T2 terminates.\n");
 	return NULL;
@@ -54,7 +54,7 @@ void * thread_function_2(void * unused)
 
 
 
-void * thread_function_1(void *unused)
+void *thread_function_1(void *unused)
 {
 	fprintf(stderr, "T1 starts.\n");
 
@@ -76,10 +76,16 @@ void * thread_function_1(void *unused)
 
 
 
-int main(int argc, char * argv [])
+int main(int argc, char *argv[])
 {
 	struct sched_param param;
 	pthread_mutexattr_t attr;
+
+	if ((argc != 2)
+	 || (sscanf(argv[1], "%lu", &Loops) != 1)) {
+		fprintf(stderr, "Usage: %s <loops>\n", argv[0]);
+		exit(EXIT_FAILURE);
+	}
 
 	pthread_mutexattr_init(&attr);
 	pthread_mutexattr_setprotocol (&attr, PTHREAD_PRIO_INHERIT);
@@ -88,18 +94,15 @@ int main(int argc, char * argv [])
 	pthread_attr_init(&_Attr_1);
 	pthread_attr_init(&_Attr_2);
 	pthread_attr_init(&_Attr_3);
-
 	pthread_attr_setschedpolicy(&_Attr_1, SCHED_FIFO);
 	pthread_attr_setschedpolicy(&_Attr_2, SCHED_FIFO);
 	pthread_attr_setschedpolicy(&_Attr_3, SCHED_FIFO);
-
 	param.sched_priority = 10;
 	pthread_attr_setschedparam(&_Attr_1, & param);
 	param.sched_priority = 20;
 	pthread_attr_setschedparam(&_Attr_2, & param);
 	param.sched_priority = 30;
 	pthread_attr_setschedparam(&_Attr_3, & param);
-
 	pthread_attr_setinheritsched(&_Attr_1, PTHREAD_EXPLICIT_SCHED);
 	pthread_attr_setinheritsched(&_Attr_2, PTHREAD_EXPLICIT_SCHED);
 	pthread_attr_setinheritsched(&_Attr_3, PTHREAD_EXPLICIT_SCHED);

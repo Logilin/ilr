@@ -1,7 +1,7 @@
 /****************************************************************************\
 ** Exemple de la formation "Temps-reel sous Linux"                          **
 **                                                                          **
-** Christophe Blaess 2010-2023                                              **
+** Christophe Blaess 2010-2025                                              **
 ** http://christophe.blaess.fr                                              **
 ** Licence GPLv2                                                            **
 \****************************************************************************/
@@ -13,11 +13,22 @@
 #include <linux/gpio.h>
 
 
-#define RPI_IRQ_GPIO_IN  23
-#define RPI_IRQ_GPIO_OUT 24
+// Input from Raspberry Pi pin #16 (GPIO 23 / 535).
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 6, 0)
+	#define RPI_IRQ_GPIO_IN  535
+#else
+	#define RPI_IRQ_GPIO_IN  23
+#endif
+
+//Output on Raspberry Pi pin #18 (GPIO 24 / 536).
+#if LINUX_VERSION_CODE >= KERNEL_VERSION(6, 6, 0)
+	#define RPI_IRQ_GPIO_OUT 536
+#else
+	#define RPI_IRQ_GPIO_OUT 24
+#endif
 
 
-static irqreturn_t my_irq_handler(int irq, void * ident)
+static irqreturn_t my_irq_handler(int irq, void *ident)
 {
 	if (gpio_get_value(RPI_IRQ_GPIO_IN) == 0)
 		return IRQ_NONE;
@@ -26,7 +37,7 @@ static irqreturn_t my_irq_handler(int irq, void * ident)
 
 
 
-static irqreturn_t my_irq_thread(int irq, void * ident)
+static irqreturn_t my_irq_thread(int irq, void *ident)
 {
 	static int out_value = 0;
 
@@ -81,6 +92,7 @@ static int __init my_module_init (void)
 static void __exit my_module_exit (void)
 {
 	free_irq(gpio_to_irq(RPI_IRQ_GPIO_IN), THIS_MODULE->name);
+
 	gpio_free(RPI_IRQ_GPIO_OUT);
 	gpio_free(RPI_IRQ_GPIO_IN);
 }
